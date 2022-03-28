@@ -22,14 +22,15 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
 
     @Override
     public List<SecurityClearance> findAll() {
-        final String sql = "select security_clearance_id, `name` from securityClearance where securityClearance_id = ?;";
+        final String sql = "select security_clearance_id, name "
+        + "from securityClearance;";
         return jdbcTemplate.query(sql, new SecurityClearanceMapper());
     }
 
     @Override
     public SecurityClearance findById(int securityClearanceId) {
 
-        final String sql = "select security_clearance_id, name security_clearance_name "
+        final String sql = "select security_clearance_id, name "
                 + "from security_clearance "
                 + "where security_clearance_id = ?;";
 
