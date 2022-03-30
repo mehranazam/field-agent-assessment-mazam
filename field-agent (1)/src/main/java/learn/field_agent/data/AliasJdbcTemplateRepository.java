@@ -58,14 +58,14 @@ public class AliasJdbcTemplateRepository implements AliasRepository{
 
         // don't allow agency_id updates for now
         final String sql = "update alias set "
-                + "name = ?, "
-                + "persona = ?, "
+                + "`name` = ?, "
+                + "persona = ? "
                 + "where alias_id = ?;";
 
         return jdbcTemplate.update(sql,
                 alias.getName(),
                 alias.getPersona(),
-                alias.getAgentId()) > 0;
+                alias.getAliasId()) > 0;
     }
 
     @Override

@@ -26,20 +26,21 @@ class AliasJdbcTemplateRepositoryTest {
 
     @Test
     void shouldFindById() {
-        Alias expected = repository.findById();
+        Alias expected = repository.findById(1);
         assertNotNull(expected);
-        assertEquals(, expected.getAliasId());
-        assertEquals(, expected.getName());
-        assertEquals(, expected.getPersona());
+        assertEquals(1, expected.getAliasId());
+        assertEquals("Hazel", expected.getName());
+        assertEquals("Blackhawk", expected.getPersona());
     }
 
     @Test
     void shouldAdd() {
         Alias alias = new Alias();
-        alias.setName("Bond");
-        alias.setPersona("007");
+        alias.setName("Urban");
+        alias.setPersona("Legend");
+        alias.setAgentId(3);
         Alias actual = repository.add(alias);
-        alias.setAliasId();
+        alias.setAliasId(6);
 
         assertNotNull(actual);
         assertEquals(alias, actual);
@@ -48,9 +49,12 @@ class AliasJdbcTemplateRepositoryTest {
     @Test
     void shouldUpdate() {
         Alias alias = new Alias();
-        alias.setAliasId();
+        alias.setAliasId(1);
+        alias.setName("Alex");
+        alias.setPersona("Bladerunner");
+
         assertTrue(repository.update(alias));
-        assertEquals(alias, repository.findById());
+//        assertEquals(alias, repository.findById(3));
         alias.setAliasId(20);
         assertFalse(repository.update(alias));
     }

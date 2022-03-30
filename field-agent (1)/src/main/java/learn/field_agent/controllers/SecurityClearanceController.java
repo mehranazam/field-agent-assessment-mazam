@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController                         // 1. Spring DI and MVC
-@RequestMapping("/security_clearances") // 2. Base URL
+@RequestMapping("/api/security_clearance") // 2. Base URL
 public class SecurityClearanceController {
 
     private final SecurityClearanceService service;

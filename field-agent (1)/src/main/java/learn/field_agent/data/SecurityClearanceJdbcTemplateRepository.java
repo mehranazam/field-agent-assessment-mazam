@@ -22,8 +22,8 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
 
     @Override
     public List<SecurityClearance> findAll() {
-        final String sql = "select security_clearance_id, name "
-        + "from securityClearance;";
+        final String sql = "select security_clearance_id, `name` "
+        + "from security_clearance;";
         return jdbcTemplate.query(sql, new SecurityClearanceMapper());
     }
 
@@ -41,7 +41,7 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
 
     @Override
     public SecurityClearance add(SecurityClearance securityClearance) {
-        final String sql = "insert into security_clearance (`name`) values (?,?);";
+        final String sql = "insert into security_clearance (`name`) values (?);";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
@@ -72,7 +72,7 @@ public class SecurityClearanceJdbcTemplateRepository implements SecurityClearanc
 
     @Override
     public boolean deleteById(int securityClearanceId) {
-        final String sql = "delete from pet where security_clearance_id = ?;";
+        final String sql = "delete from security_clearance where security_clearance_id = ?;";
         return jdbcTemplate.update(sql, securityClearanceId) > 0;
     }
 }
