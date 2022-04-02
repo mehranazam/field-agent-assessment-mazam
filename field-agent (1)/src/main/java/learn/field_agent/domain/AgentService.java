@@ -1,7 +1,9 @@
 package learn.field_agent.domain;
 
 import learn.field_agent.data.AgentRepository;
+import learn.field_agent.data.AliasRepository;
 import learn.field_agent.models.Agent;
+import learn.field_agent.models.Alias;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,8 +14,11 @@ public class AgentService {
 
     private final AgentRepository repository;
 
-    public AgentService(AgentRepository repository) {
+    private final AliasRepository aliasRepository;
+
+    public AgentService(AgentRepository repository, AliasRepository aliasRepository) {
         this.repository = repository;
+        this.aliasRepository = aliasRepository;
     }
 
     public List<Agent> findAll() {
@@ -21,8 +26,19 @@ public class AgentService {
     }
 
     public Agent findById(int agentId) {
-        return repository.findById(agentId);
+        return hydrate(repository.findById(agentId));
     }
+
+
+
+    public Agent hydrate(Agent toHydrate){
+        List<Alias> agentAliases = aliasRepository.getAliasesByAgentId(toHydrate.getAgentId());
+        toHydrate.setAliases(agentAliases);
+
+        return toHydrate;
+    }
+
+
 
     public Result<Agent> add(Agent agent) {
         Result<Agent> result = validate(agent);
@@ -88,4 +104,7 @@ public class AgentService {
 
         return result;
     }
+
+
+
 }

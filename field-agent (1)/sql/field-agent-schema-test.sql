@@ -169,3 +169,4 @@ end //
 -- 4. Change the statement terminator back to the original.
 delimiter ;
 
+call set_known_good_state();

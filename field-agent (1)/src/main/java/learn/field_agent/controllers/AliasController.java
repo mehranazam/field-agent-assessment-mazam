@@ -3,14 +3,17 @@ package learn.field_agent.controllers;
 import learn.field_agent.domain.AliasService;
 import learn.field_agent.domain.Result;
 import learn.field_agent.models.Alias;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin (origins = {"http://localhost:3000"})
 @RequestMapping("/api/alias")
 public class AliasController {
 
+    @Autowired
     private final AliasService service;
 
     public AliasController(AliasService service) {
@@ -43,7 +46,7 @@ public class AliasController {
 
         Result<Alias> result = service.update(alias);
         if (result.isSuccess()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(result.getPayload(), HttpStatus.OK);
         }
 
         return ErrorResponse.build(result);

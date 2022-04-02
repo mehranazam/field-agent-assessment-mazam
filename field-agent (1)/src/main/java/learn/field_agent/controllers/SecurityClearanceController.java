@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController                         // 1. Spring DI and MVC
+@CrossOrigin(origins={"http://localhost:3000/"})
 @RequestMapping("/api/security_clearance") // 2. Base URL
 public class SecurityClearanceController {
 

@@ -64,4 +64,9 @@ class AliasJdbcTemplateRepositoryTest {
         assertTrue(repository.deleteById(1));
         assertFalse(repository.deleteById(1));
     }
+
+    @Test
+    void shouldGetAliasesByAgentId(){
+        throw new UnsupportedOperationException();
+    }
 }

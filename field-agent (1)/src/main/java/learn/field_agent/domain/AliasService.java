@@ -1,16 +1,22 @@
 package learn.field_agent.domain;
 
+import learn.field_agent.data.AgentRepository;
 import learn.field_agent.data.AliasRepository;
+import learn.field_agent.models.Agent;
 import learn.field_agent.models.Alias;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AliasService {
 
     private final AliasRepository repository;
+    private final AgentRepository agentRepository;
 
-    public AliasService(AliasRepository repository) {
+    public AliasService(AliasRepository repository, AgentRepository agentRepository) {
         this.repository = repository;
+        this.agentRepository = agentRepository;
     }
 
     public Alias findById(int aliasId){
@@ -28,6 +34,8 @@ public class AliasService {
             return result;
         }
 
+
+
         alias = repository.add(alias);
         result.setPayload(alias);
         return result;
@@ -36,6 +44,7 @@ public class AliasService {
 
     public Result<Alias> update(Alias alias){
         Result<Alias> result = validate(alias);
+
         if(!result.isSuccess()){
             return result;
         }
@@ -49,6 +58,8 @@ public class AliasService {
            String msg = String.format("aliasId: %s, not found", alias.getAliasId());
            result.addMessage(msg, ResultType.NOT_FOUND);
        }
+       repository.update(alias);
+       result.setPayload(alias);
 
        return result;
     }
@@ -56,6 +67,8 @@ public class AliasService {
     public boolean deleteById(int aliasId){
         return repository.deleteById(aliasId);
     }
+
+
 
     private Result<Alias> validate(Alias alias) {
         Result<Alias> result = new Result<>();
@@ -67,10 +80,32 @@ public class AliasService {
 
         if(Validations.isNullOrBlank(alias.getName())){
             result.addMessage("name is required", ResultType.INVALID);
+            return result;
         }
 
-        if(Validations.isNullOrBlank(alias.getPersona())){
-            result.addMessage("persona is required", ResultType.INVALID);
+
+        List<Alias> matchingName = repository.getAliasesByName(alias.getName());
+        if(matchingName.size() > 0){
+            if(Validations.isNullOrBlank(alias.getPersona())){
+                result.addMessage("Cannot add alias with duplicate name without persona", ResultType.INVALID);
+                return result;
+            }
+
+            boolean anyAlreadyHavePersona = matchingName.stream().anyMatch(
+                    a -> alias.getPersona().equals(a.getPersona())
+            );
+            if(anyAlreadyHavePersona){
+                result.addMessage("Aliases with duplicate names must have unique personas.",
+                        ResultType.INVALID);
+                return result;
+            }
+        }
+
+        Agent matchingAgent = agentRepository.findById(alias.getAgentId());
+
+        if( matchingAgent == null ){
+            result.addMessage( "Invalid agent id.", ResultType.INVALID );
+            return result;
         }
 
         return result;

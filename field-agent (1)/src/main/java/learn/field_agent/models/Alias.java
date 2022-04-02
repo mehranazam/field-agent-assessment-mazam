@@ -1,5 +1,7 @@
 package learn.field_agent.models;
 
+import java.util.Objects;
+
 public class Alias {
 
     private int aliasId;
@@ -37,5 +39,18 @@ public class Alias {
 
     public void setAgentId(int agentId) {
         this.agentId = agentId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Alias alias = (Alias) o;
+        return aliasId == alias.aliasId && agentId == alias.agentId && Objects.equals(name, alias.name) && Objects.equals(persona, alias.persona);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aliasId, name, persona, agentId);
     }
 }

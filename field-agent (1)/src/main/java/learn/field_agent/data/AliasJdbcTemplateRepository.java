@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class AliasJdbcTemplateRepository implements AliasRepository{
@@ -34,7 +35,7 @@ public class AliasJdbcTemplateRepository implements AliasRepository{
     public Alias add(Alias alias) {
 
         final String sql = "insert into alias (name, persona, agent_id)"
-                + "values (?,?,?)";
+                + "values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int rowsAffected = jdbcTemplate.update(connection -> {
@@ -72,5 +73,19 @@ public class AliasJdbcTemplateRepository implements AliasRepository{
     public boolean deleteById(int aliasId) {
         return jdbcTemplate.update(
                 "delete from alias where alias_id = ?", aliasId) > 0;
+    }
+
+    @Override
+    public List<Alias> getAliasesByAgentId(int agentId) {
+        return jdbcTemplate.query("select * from alias where agent_id = ?",
+                new AliasMapper(),
+                agentId);
+    }
+
+    @Override
+    public List<Alias> getAliasesByName(String name) {
+        return jdbcTemplate.query("select * from alias where name = ?",
+                new AliasMapper(),
+                name);
     }
 }
